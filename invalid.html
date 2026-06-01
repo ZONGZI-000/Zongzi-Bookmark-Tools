@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title data-i18n="invalidCleanerTitle">失效书签清理</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="invalid-page">
+      <header class="page-header">
+        <div>
+          <h1 data-i18n="invalidCleanerTitle">失效书签清理</h1>
+        </div>
+      </header>
+
+      <section class="panel-card clean-tabs-card">
+        <nav class="clean-tabs" aria-label="失效书签清理功能">
+          <button type="button" class="clean-tab active" data-clean-tab="invalid" data-i18n="invalidBookmarksTab">失效书签</button>
+          <button type="button" class="clean-tab" data-clean-tab="records" data-i18n="cleanRecordsTab">清理记录</button>
+        </nav>
+      </section>
+
+      <section id="cleanRecordsPanel" class="panel-card clean-records-panel" hidden>
+        <label class="record-retention-control">
+          <span data-i18n="cleanRecordRetention">缓存时间（天）</span>
+          <input id="cleanRecordRetentionDays" type="number" min="1" max="365" step="1" value="30">
+        </label>
+        <div id="cleanRecordsList" class="clean-records-list"></div>
+      </section>
+
+      <section id="invalidCleanerPanel" class="panel-card invalid-cleaner-panel">
+        <div id="scanStats" class="scan-stats">
+          <div><strong id="scanStatTotal">0</strong><span data-i18n="scanStatTotal">总数</span></div>
+          <div><strong id="scanStatChecked">0</strong><span data-i18n="scanStatChecked">已检查</span></div>
+          <div><strong id="scanStatInvalid">0</strong><span data-i18n="scanStatInvalid">问题</span></div>
+          <div><strong id="scanStatTimeout">0</strong><span data-i18n="scanStatTimeout">已选</span></div>
+        </div>
+        <div class="scan-control-panel">
+          <div class="scan-top-row">
+            <button id="scanInvalidBookmarks" class="scan-control-button" data-i18n="scanInvalidBookmarks">扫描</button>
+            <label id="timeoutControl" class="timeout-control">
+              <span data-i18n="invalidTimeout">超时</span>
+              <span class="input-with-unit">
+                <input id="timeoutSeconds" type="number" min="3" step="1" value="15">
+                <span class="unit-label" data-i18n="secondsUnit">秒</span>
+              </span>
+            </label>
+            <label class="row-control switch-control credentials-control">
+              <span class="label-with-help">
+                <span data-i18n="carryCredentialsForInvalid">携带登录态</span>
+                <span class="help-bubble" tabindex="0" role="img" aria-label="说明" data-i18n-aria="carryCredentialsHelpLabel" data-i18n-tooltip="carryCredentialsHint">
+                  <svg class="help-bubble-icon" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false">
+                    <path d="M691.2 390.826667c-2.56 46.506667-16.64 82.773333-87.893333 153.6-35.84 35.84-58.88 63.146667-61.013334 85.333333a35.84 35.84 0 0 1-35.84 32.426667h-3.413333a35.84 35.84 0 0 1-32.426667-39.253334A231.253333 231.253333 0 0 1 554.666667 494.08c64.426667-64.426667 65.706667-85.333333 66.56-106.666667a92.586667 92.586667 0 0 0-26.453334-69.12A112.213333 112.213333 0 0 0 512 283.306667a107.52 107.52 0 0 0-107.52 107.52 35.84 35.84 0 0 1-72.106667 0A179.626667 179.626667 0 0 1 512 213.333333a184.746667 184.746667 0 0 1 133.973333 57.173334 163.413333 163.413333 0 0 1 45.226667 120.32zM505.6 810.666667a42.666667 42.666667 0 1 1 42.666667-42.666667 42.666667 42.666667 0 0 1-42.666667 42.666667zM512 0a512 512 0 1 0 512 512A512 512 0 0 0 512 0z" fill="currentColor"></path>
+                  </svg>
+                </span>
+              </span>
+              <input id="carryCredentialsForInvalid" class="switch-input" type="checkbox">
+              <span class="switch-visual" aria-hidden="true"></span>
+            </label>
+          </div>
+          <p id="invalidStatus" class="muted status-with-spinner"><span class="status-spinner" aria-hidden="true"></span><span id="invalidStatusText" data-i18n="invalidReady">准备扫描失效书签。</span></p>
+        </div>
+        <div id="scanProgress" class="scan-progress" hidden>
+          <div class="progress-bar-row">
+            <div class="progress-bar" aria-hidden="true"><span id="scanProgressBar"></span></div>
+          </div>
+          <div id="scanProgressText" class="muted progress-text"></div>
+        </div>
+      </section>
+
+      <section id="invalidResultsSection" class="panel-card" hidden>
+        <div class="invalid-summary">
+          <strong id="invalidSummary"></strong>
+          <div class="selection-toolbar">
+            <div class="settings-actions compact-actions">
+              <button id="selectAllInvalid" class="secondary" data-i18n="selectAll">全选</button>
+              <button id="clearInvalidSelection" class="secondary" data-i18n="clearSelection">清空选择</button>
+              <button id="deleteSelectedInvalid" class="clean-all-button" data-i18n="deleteSelected">删除选中</button>
+            </div>
+          </div>
+          <div id="invalidKindSelectors" class="kind-selector-actions"></div>
+        </div>
+        <div class="invalid-table-header" aria-hidden="true">
+          <span></span>
+          <span data-i18n="bookmarkName">书签名</span>
+          <span data-i18n="bookmarkUrl">地址</span>
+          <span data-i18n="invalidReason">原因</span>
+        </div>
+        <div id="invalidResults" class="invalid-results"></div>
+      </section>
+    </main>
+    <script src="app-config.js"></script>
+    <script src="i18n.js"></script>
+    <script src="invalid.js"></script>
+  </body>
+</html>

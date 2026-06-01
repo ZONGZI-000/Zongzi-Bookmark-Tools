@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title data-i18n="summaryPageTitle">书签摘要列表</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="invalid-page summary-page">
+      <header class="page-header summary-compact-header">
+        <div>
+          <h1 data-i18n="summaryPageTitle">书签摘要列表</h1>
+          <p class="muted" data-i18n="summaryPageDesc">查看本地生成的离线摘要和 AI 摘要。</p>
+        </div>
+        <div class="header-actions">
+          <button id="refreshSummaryRecords" class="secondary" data-i18n="refreshBookmarkSummary">刷新状态</button>
+        </div>
+      </header>
+
+      <section class="panel-card summary-stats-card">
+        <div class="summary-stats-grid">
+          <div><span data-i18n="summaryTotal">总书签</span><strong id="summaryPageTotal">0</strong></div>
+          <div><span data-i18n="summaryAiCount">AI摘要</span><strong id="summaryPageAi">0</strong></div>
+          <div><span data-i18n="summaryUnprocessed">未处理</span><strong id="summaryPageUnprocessed">0</strong></div>
+        </div>
+        <div class="summary-filter-row">
+          <input id="summarySearchInput" type="search" data-i18n-attr="placeholder:summarySearchPlaceholder" placeholder="搜索名称、地址、文件夹、摘要">
+          <button id="summarySearchButton" data-i18n="bookmarkSearchButton">搜索</button>
+        </div>
+        <p id="summaryPageStatus" class="muted" data-i18n="summaryPageStatusReady">摘要列表准备就绪。</p>
+      </section>
+
+      <section class="panel-card summary-list-card">
+        <div class="summary-list-toolbar">
+          <h2 data-i18n="summaryRecordList">摘要列表</h2>
+          <div class="summary-toolbar-actions">
+            <button id="summarySelectAll" class="secondary" data-i18n="summarySelectAll">全选</button>
+            <button id="summaryDeselectAll" class="secondary" data-i18n="summaryDeselectAll">取消全选</button>
+            <button id="summaryBatchOffline" class="secondary" data-i18n="summaryBatchOffline">批量离线摘要</button>
+            <button id="summaryBatchRegenerateAi" class="secondary" data-i18n="summaryBatchRegenerateAi">批量重取AI</button>
+            <span id="summaryRecordCount" class="muted">0</span>
+          </div>
+        </div>
+        <div class="summary-filter-tabs" role="group" aria-label="摘要筛选">
+          <button type="button" class="summary-filter-tag active" data-summary-filter="all" data-i18n="summaryFilterAll">全部</button>
+          <button type="button" class="summary-filter-tag" data-summary-filter="ai" data-i18n="summaryFilterAi">有 AI 摘要</button>
+          <button type="button" class="summary-filter-tag" data-summary-filter="noAi" data-i18n="summaryFilterNoAi">缺少 AI 摘要</button>
+          <button type="button" class="summary-filter-tag" data-summary-filter="unprocessed" data-i18n="summaryFilterUnprocessed">未处理</button>
+        </div>
+        <div id="summaryRecordList" class="summary-record-table"></div>
+        <div class="pagination-row">
+          <button id="summaryPrevPage" class="secondary" data-i18n="previousPage">上一页</button>
+          <span id="summaryPageInfo" class="muted">1 / 1</span>
+          <button id="summaryNextPage" class="secondary" data-i18n="nextPage">下一页</button>
+        </div>
+      </section>
+
+      <div id="summaryEditModal" class="summary-edit-modal" hidden>
+        <div class="summary-edit-modal-backdrop"></div>
+        <div class="summary-edit-modal-content">
+          <h3 data-i18n="summaryEditModalTitle">编辑书签摘要</h3>
+          <label>
+            <span data-i18n="summaryCategory">分类</span>
+            <input id="summaryEditCategory" type="text" maxlength="64" placeholder="分类">
+          </label>
+          <label>
+            <span data-i18n="summaryKeywords">关键词</span>
+            <input id="summaryEditKeywords" type="text" maxlength="200" placeholder="用逗号或顿号分隔">
+          </label>
+          <div class="summary-edit-modal-actions">
+            <button id="summaryEditSave" data-i18n="summaryEditSave">保存</button>
+            <button id="summaryEditCancel" class="secondary" data-i18n="summaryEditCancel">取消</button>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="app-config.js"></script>
+    <script src="i18n.js"></script>
+    <script src="summary.js"></script>
+  </body>
+</html>

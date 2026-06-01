@@ -1,0 +1,297 @@
+/* ============================================================
+   Model import UI styles (import-model.css)
+   ============================================================ */
+
+/* Cache status badge */
+.cache-status-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  margin-bottom: 14px;
+  font-size: 13px;
+  color: #0c4a6e;
+}
+.cache-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.cache-status-dot.ready { background: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,0.4); }
+.cache-status-dot.partial { background: #f59e0b; box-shadow: 0 0 6px rgba(245,158,11,0.4); }
+.cache-status-dot.none { background: #94a3b8; }
+
+/* Import guide card */
+.import-guide-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.import-guide-card .import-guide-title {
+  font-weight: 700;
+  font-size: 14px;
+  color: #1e293b;
+  margin: 0 0 14px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.import-guide-card .import-guide-title::before {
+  content: "📦";
+  font-size: 16px;
+}
+.import-guide-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: import-step;
+}
+.import-step-item {
+  margin-bottom: 12px;
+  padding-left: 28px;
+  position: relative;
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.5;
+}
+.import-step-item::before {
+  counter-increment: import-step;
+  content: counter(import-step);
+  position: absolute;
+  left: 0;
+  top: 1px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #eff6ff;
+  color: #3b82f6;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.import-step-item:last-child { margin-bottom: 0; }
+
+/* Mirror site link rows */
+.mirror-links-row {
+  margin-top: 6px;
+}
+.mirror-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.mirror-url-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.mirror-url-list li {
+  display: inline-block;
+}
+.mirror-url-list a {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 14px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 12px;
+  text-decoration: none;
+  border: 1px solid #e2e8f0;
+  transition: all 0.15s;
+}
+.mirror-url-list a:hover {
+  background: #dbeafe;
+  color: #3b82f6;
+  border-color: #93c5fd;
+}
+
+/* Required file list */
+.import-file-list {
+  margin: 6px 0 0 0;
+  padding: 0;
+  list-style: none;
+}
+.import-file-list li {
+  padding: 3px 0 3px 22px;
+  font-size: 12.5px;
+  color: #64748b;
+  position: relative;
+  font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+}
+.import-file-list li::before {
+  content: "📄";
+  position: absolute;
+  left: 0;
+  top: 3px;
+  font-size: 12px;
+}
+.import-file-list li code {
+  background: #f1f5f9;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 11.5px;
+}
+
+/* Import folder button */
+.import-folder-btn-row {
+  margin: 14px 0;
+}
+.import-folder-btn-row button {
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 10px;
+  border: 1px solid #3b82f6;
+  background: #eff6ff;
+  color: #1d4ed8;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.import-folder-btn-row button::before {
+  content: "📁";
+  font-size: 18px;
+}
+.import-folder-btn-row button:hover {
+  background: #dbeafe;
+  border-color: #2563eb;
+}
+.import-folder-btn-row button:active { transform: scale(0.98); }
+
+/* Import result section */
+.import-result {
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  border: 1px solid;
+}
+.import-result.import-result-success {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+.import-result.import-result-partial {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+.import-result.import-result-error {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+.import-result-title {
+  font-weight: 700;
+  font-size: 13px;
+  margin: 0 0 8px 0;
+}
+.import-result-success .import-result-title { color: #15803d; }
+.import-result-partial .import-result-title { color: #92400e; }
+.import-result-error .import-result-title { color: #b91c1c; }
+.import-result-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.import-result-item {
+  font-size: 12px;
+  padding: 3px 0;
+  color: #475569;
+  font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+}
+.import-result-item.import-success { color: #15803d; }
+.import-result-item.import-missing { color: #b91c1c; }
+.import-result-item.import-error { color: #b91c1c; }
+
+/* Delete model button area */
+.delete-model-actions {
+  margin-top: 10px;
+  text-align: right;
+}
+.delete-model-actions button {
+  background: none;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.delete-model-actions button:hover { background: #fef2f2; border-color: #f87171; }
+
+/* Model download status note */
+.model-status-note {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 10px;
+  text-align: center;
+  line-height: 1.5;
+}
+.model-status-note .dot-ready { color: #22c55e; }
+.model-status-note .dot-partial { color: #f59e0b; }
+.model-status-note .dot-none { color: #94a3b8; }
+
+/* Copy button styling */
+.copy-urls-btn.copied {
+  background: #f0fdf4 !important;
+  color: #15803d !important;
+  border-color: #bbf7d0 !important;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .cache-status-badge {
+    background: #0f172a;
+    border-color: #1e3a5f;
+    color: #93c5fd;
+  }
+  .import-guide-card {
+    background: #1e293b;
+    border-color: #334155;
+  }
+  .import-guide-card .import-guide-title { color: #e2e8f0; }
+  .import-step-item { color: #94a3b8; }
+  .import-step-item::before { background: #1e3a5f; color: #60a5fa; }
+  .mirror-url-list a {
+    background: #1e293b;
+    border-color: #334155;
+    color: #94a3b8;
+  }
+  .mirror-url-list a:hover { background: #1e3a5f; color: #60a5fa; border-color: #3b82f6; }
+  .import-file-list li { color: #94a3b8; }
+  .import-file-list li code { background: #1e293b; }
+  .import-folder-btn-row button {
+    background: #1e3a5f;
+    border-color: #3b82f6;
+    color: #60a5fa;
+  }
+  .import-folder-btn-row button:hover { background: #1e40af; border-color: #60a5fa; }
+  .import-result.import-result-success { background: #052e16; border-color: #166534; }
+  .import-result-success .import-result-title { color: #4ade80; }
+  .import-result.import-result-partial { background: #422006; border-color: #854d0e; }
+  .import-result-partial .import-result-title { color: #facc15; }
+  .import-result.import-result-error { background: #450a0a; border-color: #991b1b; }
+  .import-result-error .import-result-title { color: #f87171; }
+  .import-result-item { color: #94a3b8; }
+  .import-result-item.import-success { color: #4ade80; }
+  .import-result-item.import-missing { color: #f87171; }
+  .import-result-item.import-error { color: #f87171; }
+  .delete-model-actions button { border-color: #7f1d1d; color: #f87171; }
+  .delete-model-actions button:hover { background: #450a0a; border-color: #b91c1c; }
+  .model-status-note { color: #64748b; }
+}

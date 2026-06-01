@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title data-i18n="appTitle">粽子书签工具</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="popup">
+    <main>
+      <div class="popup-header">
+        <div class="brand-title">
+          <img class="brand-logo" src="icons/icon48.png" alt="" aria-hidden="true">
+          <div class="brand-copy">
+            <h1 data-i18n="popupTitle">粽子书签工具</h1>
+            <p data-i18n="popupTagline">同步与清理书签</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button type="button" id="languageToggle" class="secondary compact language-button" aria-label="切换语言">
+            <span id="languageToggleText">EN</span>
+          </button>
+        </div>
+      </div>
+      <section class="panel-card status-card">
+        <p id="status" class="muted" data-i18n="loadingStatus">正在加载状态...</p>
+      </section>
+
+      <nav class="module-tabs" aria-label="书签工具功能">
+        <button type="button" class="module-tab active" data-module-tab="search" data-i18n="bookmarkSearchTitle">书签检索</button>
+        <button type="button" class="module-tab" data-module-tab="summary" data-i18n="bookmarkSummaryTitle">书签摘要</button>
+        <button type="button" class="module-tab" data-module-tab="sync" data-i18n="syncBookmarksTitle">同步书签</button>
+        <button type="button" class="module-tab" data-module-tab="clean" data-i18n="cleanBookmarksTitle">清理书签</button>
+      </nav>
+
+      <section id="searchModule" class="module-panel">
+        <section class="tool-card search-tool-card">
+          <div class="tool-card-header single-column-header">
+            <div>
+              <h2 data-i18n="bookmarkSearchTitle">书签检索</h2>
+              <p class="muted" data-i18n="bookmarkSearchDesc">支持按标题、URL、AI摘要、地址和文件夹全文检索。</p>
+            </div>
+          </div>
+          <div class="search-row">
+            <input id="bookmarkSearchInput" type="search" data-i18n-attr="placeholder:bookmarkSearchPlaceholder" placeholder="输入关键词、网址、AI摘要或文件夹">
+            <button id="bookmarkSearchButton" data-i18n="bookmarkSearchButton">搜索</button>
+          </div>
+        </section>
+        <section class="panel-card search-results-card">
+          <div class="section-title-row">
+            <h2 data-i18n="bookmarkSearchResults">检索结果</h2>
+            <span id="bookmarkSearchCount" class="muted">0</span>
+          </div>
+          <div id="bookmarkSearchResults" class="bookmark-search-results empty-state" data-i18n="bookmarkSearchLoadingAll">正在加载全部书签...</div>
+        </section>
+      </section>
+
+      <section id="summaryModule" class="module-panel" hidden>
+        <section class="tool-card summary-tool-card">
+          <div class="tool-card-header single-column-header">
+            <div>
+              <h2 data-i18n="bookmarkSummaryTitle">书签摘要</h2>
+              <p class="muted" data-i18n="bookmarkSummaryDesc">在本地为书签生成摘要和分类，帮助检索更准确。默认不会联网。</p>
+            </div>
+          </div>
+
+          <label class="row-control switch-control summary-auto-row">
+            <span data-i18n="bookmarkSummaryAutoIndex">自动索引</span>
+            <input id="bookmarkSummaryAuto" class="switch-input" type="checkbox">
+            <span class="switch-visual" aria-hidden="true"></span>
+          </label>
+
+          <div class="tool-card-actions">
+            <button id="openSummarySettings" data-i18n="summaryEngineSettingsButton">摘要引擎设置</button>
+            <button id="openSummaryPage" class="secondary" data-i18n="openSummaryPage">打开摘要列表</button>
+          </div>
+        </section>
+
+        <section class="panel-card summary-status-card">
+          <div class="section-title-row">
+            <h2 data-i18n="bookmarkSummaryStatus">摘要状态</h2>
+            <span id="bookmarkSummaryRunning" class="status-pill" data-i18n="bookmarkSummaryIdle">空闲</span>
+          </div>
+          <div class="summary-engine-summary">
+            <span data-i18n="summaryEngine">引擎</span>
+            <strong id="summaryEngine">离线引擎</strong>
+          </div>
+          <p id="summaryUpdatedAt" class="muted summary-updated" data-i18n="summaryNeverUpdated">尚未生成摘要。</p>
+        </section>
+      </section>
+
+      <section id="syncModule" class="module-panel" hidden>
+        <section id="webdavNotice" class="panel-card notice-card" hidden>
+          <strong data-i18n="webdavNotConfiguredTitle">请先完成同步设置</strong>
+          <p class="muted" data-i18n="webdavNotConfiguredDesc">请先完成当前同步方式的设置，再执行同步、上传或下载。</p>
+          <a class="button-link" href="options.html" target="_blank" data-i18n="goWebdavSettings">去同步设置</a>
+        </section>
+
+        <section class="tool-card sync-tool-card">
+          <div class="tool-card-header">
+            <div>
+              <h2 data-i18n="syncBookmarksTitle">同步书签</h2>
+              <p class="muted" data-i18n="syncBookmarksDesc">备份、恢复和跨设备同步书签。</p>
+            </div>
+            <a id="openSettingsLink" class="settings-shortcut" href="options.html" target="_blank" data-i18n="goSyncSettings" aria-label="打开设置">去同步设置</a>
+          </div>
+          <div class="tool-card-actions" id="syncActionButtons">
+            <button id="syncNow" class="smart-sync-button" data-sync-action="smart" data-i18n="startSync" data-i18n-attr="data-tooltip:smartSyncHint">智能同步</button>
+            <button id="uploadNow" class="secondary" data-sync-action="upload" data-i18n="uploadBackup">上传备份</button>
+            <button id="downloadNow" class="secondary" data-sync-action="download" data-i18n="downloadRestore">下载恢复</button>
+            <button id="exportLocalFile" class="secondary local-file-action" data-sync-action="export" data-i18n="exportLocalFile">导出文件</button>
+            <button id="importLocalFile" class="secondary local-file-action" data-sync-action="import" data-i18n="importLocalFile">导入文件</button>
+            <input id="localFileInput" type="file" accept="application/json,.json" hidden>
+          </div>
+        </section>
+
+        <section class="panel-card control-card compact-settings-card sync-inline-settings" aria-label="同步设置">
+          <label class="row-control switch-control sync-auto-row">
+            <span data-i18n="autoSync">启用自动同步</span>
+            <input id="autoSync" class="switch-input" type="checkbox">
+            <span class="switch-visual" aria-hidden="true"></span>
+          </label>
+          <label id="syncIntervalControl" class="inline-field sync-interval-row">
+            <span data-i18n="syncInterval">同步间隔（分钟）</span>
+            <input id="syncIntervalMinutes" type="number" min="5" step="1">
+          </label>
+          <label class="inline-field sync-mode-row">
+            <span data-i18n="downloadMode">下载模式</span>
+            <select id="downloadMode">
+              <option value="safe" data-i18n="safeMode">安全模式</option>
+              <option value="mirror" data-i18n="mirrorMode">完全镜像模式</option>
+            </select>
+          </label>
+        </section>
+
+        <section class="panel-card sync-version-card">
+          <div class="section-title-row">
+            <h2 data-i18n="syncVersionHistory">版本历史</h2>
+            <span id="syncVersionCount" class="muted">0</span>
+          </div>
+          <div id="syncVersionList" class="sync-version-list empty-state" data-i18n="syncVersionNoRecords">暂无版本记录。</div>
+        </section>
+      </section>
+
+      <section id="cleanModule" class="module-panel" hidden>
+        <section class="tool-card clean-tool-card invalid-clean-card">
+          <div class="tool-card-header single-column-header">
+            <div>
+              <h2 data-i18n="cleanInvalidBookmarks">清理失效书签</h2>
+              <p class="muted" data-i18n="invalidCleanEntryDesc">扫描打不开、超时或需要确认的链接。</p>
+            </div>
+          </div>
+          <div class="tool-card-actions single-action">
+            <button id="openInvalidCleaner" class="clean-all-button compact-open-button" data-i18n="openInvalidCleaner">进入清理</button>
+          </div>
+        </section>
+
+        <section class="tool-card clean-tool-card local-clean-card">
+          <div>
+            <h2 data-i18n="localCleanTitle">本地书签整理</h2>
+            <p class="muted" data-i18n="localCleanDesc">清理重复书签、空文件夹和一键整理本地书签。</p>
+          </div>
+          <div class="tool-card-actions">
+            <button id="cleanAllNow" class="clean-primary-button" data-i18n="cleanAll">一键清理</button>
+            <button id="cleanDuplicatesNow" class="secondary" data-i18n="cleanDuplicates">清理重复</button>
+            <button id="cleanEmptyFoldersNow" class="secondary" data-i18n="cleanEmptyFolders">清理空文件夹</button>
+          </div>
+        </section>
+
+        <section class="panel-card control-card compact-settings-card">
+          <h2 data-i18n="cleanSettingsTitle">清理设置</h2>
+          <label id="cleanIntervalControl" class="row-control stacked-control">
+            <span data-i18n="cleanInterval">清理间隔（分钟）</span>
+            <input id="cleanIntervalMinutes" type="number" min="5" step="1">
+          </label>
+          <label class="row-control switch-control">
+            <span data-i18n="autoCleanDuplicates">自动清理重复书签</span>
+            <input id="autoCleanDuplicates" class="switch-input" type="checkbox">
+            <span class="switch-visual" aria-hidden="true"></span>
+          </label>
+          <label id="autoCleanEmptyFoldersControl" class="row-control switch-control">
+            <span data-i18n="autoCleanEmptyFolders">自动清理空文件夹</span>
+            <input id="autoCleanEmptyFolders" class="switch-input" type="checkbox">
+            <span class="switch-visual" aria-hidden="true"></span>
+          </label>
+        </section>
+      </section>
+    </main>
+    <script src="app-config.js"></script>
+    <script src="i18n.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

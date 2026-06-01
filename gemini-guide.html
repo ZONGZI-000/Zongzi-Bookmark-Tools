@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title data-i18n="geminiGuidePageTitle">Gemini Nano 设置引导</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="invalid-page gemini-guide-page">
+      <header class="page-header gemini-guide-header">
+        <div>
+          <h1 data-i18n="geminiGuidePageTitle">Gemini Nano 设置引导</h1>
+          <p class="muted" data-i18n="geminiGuidePageDesc">按步骤打开 Chrome 页面并手动完成设置；插件无法直接修改 Chrome flags 或下载模型。</p>
+        </div>
+      </header>
+
+      <section class="panel-card gemini-guide-steps-card">
+        <article class="gemini-guide-step">
+          <div class="gemini-step-index">1</div>
+          <div class="gemini-step-content">
+            <h2 data-i18n="geminiGuideFlagsTitle">开启 Chrome Flags 并重启</h2>
+            <p data-i18n="geminiGuideFlagsDesc">打开两个 flags 页面，分别设置为正确值，然后点击重新启动并完全关闭 Chrome 再打开。</p>
+            <div class="gemini-flag-table">
+              <div><strong>#optimization-guide-on-device-model</strong><span>Enabled BypassPerfRequirement</span></div>
+              <div><strong>#prompt-api-for-gemini-nano</strong><span>Enabled</span></div>
+            </div>
+            <div class="gemini-guide-actions">
+              <button id="openOptimizationFlag" data-i18n="openOptimizationFlag">一键跳转模型 Flag</button>
+              <button id="openPromptApiFlag" class="secondary" data-i18n="openPromptApiFlag">一键跳转 Prompt API Flag</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="gemini-guide-step">
+          <div class="gemini-step-index">2</div>
+          <div class="gemini-step-content">
+            <h2 data-i18n="geminiGuideLanguageTitle">切换浏览器语言为英文</h2>
+            <p data-i18n="geminiGuideLanguageDesc">添加 English (United States)，移到列表最上方并设为默认语言，然后重启 Chrome。</p>
+            <div class="gemini-guide-actions">
+              <button id="openLanguagePage" data-i18n="openChromeLanguage">语言设置</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="gemini-guide-step">
+          <div class="gemini-step-index">3</div>
+          <div class="gemini-step-content">
+            <h2 data-i18n="geminiGuideDownloadTitle">检查组件并触发模型下载</h2>
+            <p data-i18n="geminiGuideDownloadDesc">系统盘建议预留至少 22GB 空间。打开组件页面后按 Ctrl+R 多刷新几次；必要时在普通网页 Console 执行下面命令触发下载。</p>
+            <code class="gemini-console-code">await window.ai.canCreateTextSession()</code>
+            <div class="gemini-guide-actions">
+              <button id="openComponentsPage" data-i18n="openChromeComponents">组件页面</button>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel-card gemini-guide-note-card gemini-verify-card">
+        <div class="section-title-row">
+          <h2 data-i18n="geminiGuideVerifyTitle">真实验证</h2>
+          <button id="verifyGeminiNano" type="button" data-i18n="validateAiStatus">验证状态</button>
+        </div>
+        <p data-i18n="geminiGuideVerifyDesc">点击验证会在当前引导页真实创建 Gemini Nano 会话，并发送一次极短测试。只有模型返回成功才会显示可用。</p>
+        <p id="geminiVerifyResult" class="muted gemini-verify-result" data-i18n="aiValidationIdle">选择 AI 后，可在这里验证当前状态。</p>
+      </section>
+    </main>
+    <script src="i18n.js"></script>
+    <script src="gemini-guide.js"></script>
+  </body>
+</html>

@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title data-i18n="settingsTitle">粽子书签工具设置</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="import-model.css">
+  </head>
+  <body class="settings-page unified-settings-page">
+    <main class="settings settings-shell">
+      <div class="settings-header-block">
+        <h1 data-i18n="settingsTitle">粽子书签工具设置</h1>
+        <p class="muted" data-i18n="settingsPageDesc">统一管理同步设置与摘要引擎设置。</p>
+      </div>
+
+      <nav class="settings-tabs" aria-label="设置模块">
+        <button type="button" class="settings-tab active" data-settings-tab="sync" data-i18n="syncSettingsTitle">同步设置</button>
+        <button type="button" class="settings-tab" data-settings-tab="summary" data-i18n="summaryEngineSettingsTitle">摘要引擎设置</button>
+      </nav>
+
+      <section id="syncSettingsPanel" class="settings-panel">
+        <section class="panel-card">
+          <h2 data-i18n="syncProviderTitle">同步后端</h2>
+          <label class="inline-field settings-inline-field settings-inline-select">
+            <span data-i18n="syncProvider">同步方式</span>
+            <select id="syncProvider">
+              <option value="localFile" data-i18n="syncProviderLocalFile">本地文件导入/导出</option>
+              <option value="webdav" data-i18n="syncProviderWebdav">WebDAV</option>
+              <option value="github" data-i18n="syncProviderGithub">GitHub</option>
+              <option value="gitee" data-i18n="syncProviderGitee">Gitee</option>
+            </select>
+          </label>
+          <p id="syncProviderHint" class="muted" data-i18n="syncProviderWebdavHint">通过 WebDAV 远端 JSON 文件进行自动同步、上传和下载。</p>
+        </section>
+
+        <section id="webdavSettingsCard" class="panel-card">
+          <h2 data-i18n="webdavSettingsTitle">WebDAV 设置</h2>
+          <form id="settingsForm">
+            <label>
+              <span data-i18n="webdavUrl">WebDAV 文件夹地址</span>
+              <input id="webdavUrl" type="url" placeholder="https://example.com/remote.php/dav/files/user/bookmarks/" required>
+            </label>
+            <label>
+              <span data-i18n="username">用户名</span>
+              <input id="username" type="text" autocomplete="username">
+            </label>
+            <label>
+              <span data-i18n="password">密码或应用令牌</span>
+              <div class="password-field">
+                <input id="password" type="password" autocomplete="current-password">
+                <button type="button" id="togglePassword" class="secondary compact" data-i18n="showPassword">查看</button>
+              </div>
+            </label>
+            <p class="muted" data-i18n="encryptedStorageHint">WebDAV URL、用户名和密码会加密保存在本机浏览器存储中。</p>
+            <label>
+              <span data-i18n="remoteFile">远端文件名</span>
+              <input id="remoteFile" type="text" placeholder="chrome-bookmarks.json">
+            </label>
+            <label>
+              <span data-i18n="requestTimeout">WebDAV 请求超时（秒）</span>
+              <input id="requestTimeoutSeconds" type="number" min="5" step="1" placeholder="30">
+            </label>
+            <div class="settings-actions sync-settings-actions">
+              <button type="button" id="testWebdav" class="secondary" data-i18n="testWebdav">测试 WebDAV</button>
+              <button type="submit" data-i18n="saveSettings">保存设置</button>
+            </div>
+          </form>
+          <p id="message" class="muted"></p>
+        </section>
+
+        <section id="gitSettingsCard" class="panel-card" hidden>
+          <h2 id="gitSettingsTitle" data-i18n="gitSettingsTitle">Git 同步设置</h2>
+          <label class="inline-field settings-inline-field">
+            <span data-i18n="gitToken">访问令牌</span>
+            <input id="gitToken" type="password" autocomplete="off" placeholder="ghp_... / gitee token">
+          </label>
+          <label class="inline-field settings-inline-field">
+            <span data-i18n="gitOwner">用户名/组织</span>
+            <input id="gitOwner" type="text" placeholder="zongzi">
+          </label>
+          <label class="inline-field settings-inline-field">
+            <span data-i18n="gitRepo">仓库名</span>
+            <input id="gitRepo" type="text" placeholder="bookmark-backup">
+          </label>
+          <label class="inline-field settings-inline-field">
+            <span data-i18n="gitBranch">分支</span>
+            <input id="gitBranch" type="text" placeholder="main / master">
+          </label>
+          <label class="inline-field settings-inline-field">
+            <span data-i18n="gitFilePath">文件路径</span>
+            <input id="gitFilePath" type="text" placeholder="chrome-bookmarks.json">
+          </label>
+          <p class="muted" data-i18n="gitSettingsHint">令牌仅保存在本机加密存储中；上传会提交 JSON 快照，仓库提交记录即版本历史。</p>
+          <div class="settings-actions sync-settings-actions">
+            <button type="button" id="testGitProvider" class="secondary" data-i18n="testGitProvider">测试连接</button>
+            <button type="button" id="saveGitSettings" data-i18n="saveSettings">保存设置</button>
+          </div>
+          <p id="gitMessage" class="muted"></p>
+        </section>
+
+        <section id="localFileSettingsCard" class="panel-card" hidden>
+          <h2 data-i18n="localFileSettingsTitle">本地文件导入/导出</h2>
+          <p class="muted" data-i18n="localFileSettingsHint">无需网络。导出会生成当前书签 JSON 备份；导入时会按下方下载模式恢复。</p>
+          <div class="settings-actions sync-settings-actions">
+            <button type="button" id="exportSettingsLocalFile" data-i18n="exportLocalFile">导出文件</button>
+            <button type="button" id="importSettingsLocalFile" class="secondary" data-i18n="importLocalFile">导入文件</button>
+            <input id="settingsLocalFileInput" type="file" accept="application/json,.json" hidden>
+          </div>
+          <p id="localFileMessage" class="muted"></p>
+        </section>
+
+        <section class="panel-card">
+          <h2 data-i18n="howItSyncs">同步方式</h2>
+          <p id="syncDescription"></p>
+        </section>
+      </section>
+
+      <section id="summarySettingsPanel" class="settings-panel" hidden>
+        <section class="panel-card">
+          <h2 data-i18n="summaryEngineTitle">引擎设置</h2>
+          <p class="muted" data-i18n="summaryEngineSettingsDesc">选择摘要引擎和配置 AI 服务。</p>
+          <label class="inline-field settings-inline-field settings-inline-select">
+            <span data-i18n="bookmarkSummaryEngineMode">引擎</span>
+            <select id="bookmarkSummaryEngineMode">
+              <option value="textrank" data-i18n="summaryModeTextRank">TextRank 离线引擎</option>
+              <option value="transformer" data-i18n="summaryModeTransformer">本地小模型</option>
+              <option value="geminiNano" data-i18n="summaryModeGeminiNano">Chrome Gemini Nano（需验证）</option>
+              <option value="customOpenai" data-i18n="summaryModeCustomOpenai">自定义 OpenAI（需验证）</option>
+              <option value="customAnthropic" data-i18n="summaryModeCustomAnthropic">自定义 Anthropic（需验证）</option>
+            </select>
+          </label>
+        </section>
+
+        <section id="localModelTools" class="panel-card" hidden>
+          <h2 data-i18n="localModelTitle">本地小模型</h2>
+          <label class="inline-field settings-inline-field settings-inline-select">
+            <span data-i18n="localModelSelect">模型选择</span>
+            <select id="localModelSelect">
+              <option value="lamini-flan-t5" data-i18n="localModelLamini">LaMini-Flan-T5 783M（多语言，推荐）</option>
+              <option value="mt5-small" data-i18n="localModelMt5">mT5-small（中英文）</option>
+              <option value="distilbart" data-i18n="localModelDistilbart">DistilBART CNN 6-6（英文，最轻量）</option>
+            </select>
+          </label>
+          <div id="inlineDownloadPanel">
+            <div id="modelCacheStatusBadge" class="cache-status-badge" hidden>
+              <span id="modelCacheStatusDot" class="cache-status-dot none"></span>
+              <span id="modelCacheStatusText"></span>
+            </div>
+            <div class="import-guide-card">
+              <p class="import-guide-title" data-i18n="importGuideTitle">如何导入模型</p>
+              <ol class="import-guide-steps">
+                <li class="import-step-item">
+                  <span data-i18n="importGuideStep1">1. 从以下镜像站任选一个，下载模型文件夹：</span>
+                  <div class="mirror-links-row" id="mirrorLinksRow"></div>
+                </li>
+                <li class="import-step-item">
+                  <span data-i18n="importGuideStep2">2. 文件夹应包含以下 5 个文件：</span>
+                  <ul class="import-file-list" id="importRequiredFiles"></ul>
+                </li>
+                <li class="import-step-item">
+                  <span data-i18n="importGuideStep3">3. 点击下方按钮，选择模型文件夹一键导入。</span>
+                </li>
+              </ol>
+            </div>
+            <div class="import-folder-btn-row">
+              <button id="importModelFolderBtn" type="button" data-i18n="importModelFolder">选择模型文件夹导入</button>
+              <input id="localModelFileFolderInput" type="file" webkitdirectory hidden>
+            </div>
+            <div id="importResult" class="import-result" hidden>
+              <p class="import-result-title" id="importResultTitle"></p>
+              <ul class="import-result-list" id="importResultList"></ul>
+            </div>
+            <div class="delete-model-actions" id="deleteModelActions" hidden>
+              <button id="inlineDeleteBtn" type="button" class="danger" data-i18n="deleteModelCache">删除当前模型缓存</button>
+            </div>
+            <p id="inlineDownloadStatus" class="model-status-note" data-i18n="localModelNote">从镜像站下载模型文件夹后一键导入，模型在浏览器本地运行。</p>
+          </div>
+        </section>
+
+        <section id="geminiNanoTools" class="panel-card" hidden>
+          <h2 data-i18n="summaryModeGeminiNano">Chrome Gemini Nano</h2>
+          <div class="settings-actions">
+            <button id="setupGeminiNano" type="button" data-i18n="setupGeminiNano">设置引导</button>
+            <button id="validateGeminiNano" type="button" class="secondary" data-i18n="validateAiStatus">验证状态</button>
+          </div>
+          <p class="muted" data-i18n="geminiNanoGuideNote">Gemini Nano 需要启用 Chrome 实验功能、切换英文语言并下载模型后才能使用。</p>
+        </section>
+
+        <section id="customAiSettings" class="panel-card" hidden>
+          <h2 data-i18n="customAiConfigTitle">自定义 AI 配置</h2>
+          <label class="inline-field settings-inline-field">
+            <span data-i18n="customAiBaseUrl">接口地址</span>
+            <input id="customAiBaseUrl" type="url" placeholder="https://api.openai.com/v1">
+          </label>
+          <label class="inline-field settings-inline-field">
+            <span data-i18n="customAiApiKey">API Key</span>
+            <div class="password-field">
+              <input id="customAiApiKey" type="password" autocomplete="off" placeholder="sk-...">
+              <button type="button" id="toggleCustomAiApiKey" class="secondary compact" data-i18n="showPassword">查看</button>
+            </div>
+          </label>
+          <label class="inline-field settings-inline-field">
+            <span data-i18n="customAiModel">模型</span>
+            <input id="customAiModel" type="text" placeholder="gpt-4o-mini / claude-3-5-haiku-latest">
+          </label>
+          <div class="settings-actions">
+            <button id="validateCustomAi" type="button" data-i18n="validateAiConnection">验证通断</button>
+            <button id="saveCustomAiConfig" type="button" class="secondary" data-i18n="saveSettings">保存配置</button>
+          </div>
+          <p class="muted" data-i18n="customAiSummaryRule">AI 会根据书签内容生成 50 字以内摘要；密钥仅保存在本机。</p>
+        </section>
+
+        <section id="aiValidationStatusSection" class="panel-card">
+          <h2 data-i18n="aiValidationStatus">验证状态</h2>
+          <p id="summaryAiValidationStatus" class="muted" data-i18n="aiValidationIdle">选择需要 AI 的引擎后，可在这里验证当前状态。</p>
+        </section>
+      </section>
+    </main>
+    <script src="app-config.js"></script>
+    <script src="i18n.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

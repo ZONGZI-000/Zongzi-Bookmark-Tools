@@ -1,0 +1,27 @@
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node
+node_modules/
+
+# Build artifacts
+*.zip
+*.crx
+*.pem
+
+# Temp files
+*.tmp
+*.log
+
+# Credentials (just in case)
+.env
+credentials.json
