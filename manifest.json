@@ -38,6 +38,7 @@
         "models/mini_embeddings.bin",
         "models/local-summary/*",
         "lib/transformers.min.js",
+        "shared/model-registry.js",
         "offscreen-inference.html",
         "offscreen-inference.js"
       ],

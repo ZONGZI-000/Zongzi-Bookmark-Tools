@@ -64,112 +64,7 @@ const summaryEls = {
   importRequiredFiles: document.querySelector('#importRequiredFiles'),
 };
 
-const MODEL_REGISTRY = {
-  'lamini-flan-t5': {
-    repo: 'Xenova/LaMini-Flan-T5-783M',
-    name: 'LaMini-Flan-T5 783M',
-    files: [
-      'onnx/encoder_model_quantized.onnx',
-      'onnx/decoder_model_merged_quantized.onnx',
-      'tokenizer.json',
-      'config.json',
-      'tokenizer_config.json',
-    ],
-    defaultSize: 320000000,
-    fileSizeHints: {
-      'tokenizer.json': 2400000,
-      'config.json': 800,
-      'tokenizer_config.json': 2300,
-    },
-  },
-  'mt5-small': {
-    repo: 'Xenova/mt5-small',
-    name: 'mT5-small',
-    files: [
-      'onnx/encoder_model_quantized.onnx',
-      'onnx/decoder_model_merged_quantized.onnx',
-      'tokenizer.json',
-      'config.json',
-      'tokenizer_config.json',
-    ],
-    defaultSize: 310000000,
-    fileSizeHints: {
-      'tokenizer.json': 4300000,
-      'config.json': 1200,
-      'tokenizer_config.json': 2300,
-    },
-  },
-  distilbart: {
-    repo: 'Xenova/distilbart-cnn-6-6',
-    name: 'DistilBART CNN 6-6',
-    files: [
-      'onnx/encoder_model_quantized.onnx',
-      'onnx/decoder_model_merged_quantized.onnx',
-      'tokenizer.json',
-      'config.json',
-      'tokenizer_config.json',
-    ],
-    defaultSize: 108000000,
-    fileSizeHints: {
-      'tokenizer.json': 1400000,
-      'config.json': 800,
-      'tokenizer_config.json': 1300,
-    },
-  },
-};
-
-const MODEL_KEY_ALIASES = { 'qwen3-0.6b': 'lamini-flan-t5' };
-
-const MODEL_DOWNLOAD_SOURCES = {
-  'lamini-flan-t5': {
-    name: 'LaMini-Flan-T5 783M',
-    repo: 'Xenova/LaMini-Flan-T5-783M',
-    files: [
-      'onnx/encoder_model_quantized.onnx',
-      'onnx/decoder_model_merged_quantized.onnx',
-      'tokenizer.json',
-      'config.json',
-      'tokenizer_config.json',
-    ],
-    mirrors: [
-      { name: 'HuggingFace', url: 'https://huggingface.co/Xenova/LaMini-Flan-T5-783M/tree/main' },
-      { name: 'hf-mirror', url: 'https://hf-mirror.com/Xenova/LaMini-Flan-T5-783M/tree/main' },
-      { name: 'ModelScope', url: 'https://modelscope.cn/models/Xenova/LaMini-Flan-T5-783M/files' },
-    ],
-  },
-  'mt5-small': {
-    name: 'mT5-small',
-    repo: 'Xenova/mt5-small',
-    files: [
-      'onnx/encoder_model_quantized.onnx',
-      'onnx/decoder_model_merged_quantized.onnx',
-      'tokenizer.json',
-      'config.json',
-      'tokenizer_config.json',
-    ],
-    mirrors: [
-      { name: 'HuggingFace', url: 'https://huggingface.co/Xenova/mt5-small/tree/main' },
-      { name: 'hf-mirror', url: 'https://hf-mirror.com/Xenova/mt5-small/tree/main' },
-      { name: 'ModelScope', url: 'https://modelscope.cn/models/Xenova/mt5-small/files' },
-    ],
-  },
-  'distilbart': {
-    name: 'DistilBART CNN 6-6',
-    repo: 'Xenova/distilbart-cnn-6-6',
-    files: [
-      'onnx/encoder_model_quantized.onnx',
-      'onnx/decoder_model_merged_quantized.onnx',
-      'tokenizer.json',
-      'config.json',
-      'tokenizer_config.json',
-    ],
-    mirrors: [
-      { name: 'HuggingFace', url: 'https://huggingface.co/Xenova/distilbart-cnn-6-6/tree/main' },
-      { name: 'hf-mirror', url: 'https://hf-mirror.com/Xenova/distilbart-cnn-6-6/tree/main' },
-      { name: 'ModelScope', url: 'https://modelscope.cn/models/Xenova/distilbart-cnn-6-6/files' },
-    ],
-  },
-};
+const ZongziModelRegistry = window.ZongziModelRegistry || {};
 
 const DB_NAME = 'zongzi_model_store';
 const DB_VERSION = 3;
@@ -774,13 +669,16 @@ async function deleteModelFiles(modelId) {
 }
 
 function getCurrentModelId() {
-  let id = summaryEls.localModelSelect.value || 'lamini-flan-t5';
-  if (MODEL_KEY_ALIASES[id]) id = MODEL_KEY_ALIASES[id];
-  return MODEL_REGISTRY[id] ? id : 'distilbart';
+  const id = summaryEls.localModelSelect.value || 'lamini-flan-t5';
+  return typeof ZongziModelRegistry.normalizeModelId === 'function'
+    ? ZongziModelRegistry.normalizeModelId(id)
+    : id;
 }
 
 function getCurrentModelMeta() {
-  return MODEL_REGISTRY[getCurrentModelId()];
+  return typeof ZongziModelRegistry.getModelMeta === 'function'
+    ? ZongziModelRegistry.getModelMeta(getCurrentModelId())
+    : null;
 }
 
 function getModelFileKey(modelId, file) {
@@ -797,7 +695,9 @@ function getStoredModelFileBytes(info) {
 // ============================================================
 
 function getModelSource(modelId) {
-  return MODEL_DOWNLOAD_SOURCES[modelId] || MODEL_DOWNLOAD_SOURCES['lamini-flan-t5'];
+  return typeof ZongziModelRegistry.getDownloadSource === 'function'
+    ? ZongziModelRegistry.getDownloadSource(modelId)
+    : null;
 }
 
 function renderImportGuide(modelId) {

@@ -5,20 +5,7 @@
   const DB_VERSION = 3;
   const STORE_NAME = 'modelFiles';
 
-  // Model repo → modelId mapping (reverse of model-download.js MODEL_REGISTRY)
-  const REPO_TO_MODEL_ID = {
-    'Xenova/LaMini-Flan-T5-783M': 'lamini-flan-t5',
-    'Xenova/mt5-small': 'mt5-small',
-    'Xenova/distilbart-cnn-6-6': 'distilbart',
-  };
-
-  // modelId → repo name (for pipeline)
-  const MODEL_ID_TO_REPO = {
-    'lamini-flan-t5': 'Xenova/LaMini-Flan-T5-783M',
-    'qwen3-0.6b': 'Xenova/LaMini-Flan-T5-783M', // legacy
-    'mt5-small': 'Xenova/mt5-small',
-    'distilbart': 'Xenova/distilbart-cnn-6-6',
-  };
+  const ModelRegistry = self.ZongziModelRegistry || {};
 
   let pipePromise = null;
   let currentModelKey = '';
@@ -68,15 +55,19 @@
   /* ---------- Fetch interception ---------- */
   // Intercept HuggingFace fetches to serve from our IndexedDB cache
   function interceptFetch(modelId) {
+    const normalizedModelId = typeof ModelRegistry.normalizeModelId === 'function'
+      ? ModelRegistry.normalizeModelId(modelId)
+      : modelId;
     const originalFetch = window.fetch.bind(window);
+    const repoToModelId = ModelRegistry.repoToModelId || {};
 
     window.fetch = async function (url, options) {
       const urlStr = String(url);
 
       // Check if this is a HuggingFace model file URL
-      for (var repo in REPO_TO_MODEL_ID) {
-        if (!REPO_TO_MODEL_ID.hasOwnProperty(repo)) continue;
-        var repoModelId = REPO_TO_MODEL_ID[repo];
+      for (var repo in repoToModelId) {
+        if (!repoToModelId.hasOwnProperty(repo)) continue;
+        var repoModelId = repoToModelId[repo];
         var prefix = 'https://huggingface.co/' + repo + '/resolve/';
         if (urlStr.startsWith(prefix)) {
           var filePath = urlStr.substring(prefix.length);
@@ -84,8 +75,8 @@
           var filePathNoBranch = filePath.replace(/^[a-zA-Z0-9_.-]+\//, '');
           // Try with and without branch prefix; modelId then repoModelId
           var keys = [
-            modelId + '::' + filePathNoBranch,
-            modelId + '::' + filePath,
+            normalizedModelId + '::' + filePathNoBranch,
+            normalizedModelId + '::' + filePath,
             repoModelId + '::' + filePathNoBranch,
             repoModelId + '::' + filePath,
           ];
@@ -115,7 +106,9 @@
 
   /* ---------- Transformer.js pipeline ---------- */
   async function getPipeline(modelId) {
-    var repo = MODEL_ID_TO_REPO[modelId] || 'Xenova/distilbart-cnn-6-6';
+    var repo = typeof ModelRegistry.getRepo === 'function'
+      ? ModelRegistry.getRepo(modelId)
+      : 'Xenova/distilbart-cnn-6-6';
     var key = repo;
 
     if (pipePromise && currentModelKey === key) {
