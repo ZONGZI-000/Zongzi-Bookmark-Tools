@@ -6,7 +6,7 @@
 [![Version](https://img.shields.io/badge/version-1.0.0-blue)](#)
 [![Manifest](https://img.shields.io/badge/manifest-v3-green)](#)
 [![License](https://img.shields.io/badge/license-MIT-orange)](#)
-[![Beta](https://img.shields.io/badge/release-v0.1.0--beta-yellow)](https://github.com/ZONGZI-000/zongzi-bookmark-sync/releases/tag/v0.1.0-beta)
+[![Beta](https://img.shields.io/badge/release-v0.1.0--beta-yellow)](https://github.com/ZONGZI-000/Zongzi-Bookmark-Tools/releases/tag/v0.1.0-beta)
 
 ---
 
@@ -96,11 +96,11 @@
 ### 从 GitHub 下载 / Download from GitHub
 
 ```bash
-git clone https://github.com/ZONGZI-000/zongzi-bookmark-sync.git
+git clone https://github.com/ZONGZI-000/Zongzi-Bookmark-Tools.git
 ```
 
-或访问 [Releases](https://github.com/ZONGZI-000/zongzi-bookmark-sync/releases) 下载最新版本压缩包。  
-Or download the latest ZIP from [Releases](https://github.com/ZONGZI-000/zongzi-bookmark-sync/releases).
+或访问 [Releases](https://github.com/ZONGZI-000/Zongzi-Bookmark-Tools/releases) 下载最新版本压缩包。  
+Or download the latest ZIP from [Releases](https://github.com/ZONGZI-000/Zongzi-Bookmark-Tools/releases).
 
 ---
 
